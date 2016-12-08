@@ -8,14 +8,20 @@ use App\Models\Painel\Product;
 
 class ProdutoController extends Controller
 {
+    private $product;
+
+    public function __construct(Product $product)
+    {
+        $this->product = $product;
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Product $product)
+    public function index()
     {
-        $products = $product->all();
+        $products = $this->product->all();
         
         return view('painel.products.index', compact('products'));
     }
@@ -84,5 +90,83 @@ class ProdutoController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function tests() 
+    {
+        //$prod = $this->product;
+        //$prod->name = 'Nome do produto';
+        //$prod->number = '131231';
+        //$prod->active = true;
+        //$prod->category = "eletronicos";
+        //$prod->description = "Description do produto aqui";
+        //$insert = $prod->save();
+
+        //if( $insert)
+           // return 'Inserido com sucesso';
+        //else
+           // return 'Falha ao inserir';
+
+        //$insert = $this->product->create([
+            //'name' => 'Nome do produto 2',
+            //'number' => '434435',
+            //'active' => false,
+            //'category' => 'eletronicos',
+            //'description' => 'Descrição vem aqui'
+        //]);
+
+        //if( $insert)
+           //return "Inserido com sucesso ID: {$insert->id}";
+        //else
+           //return 'Falha ao inserir';
+
+        //$prod = $this->product->find(5);
+        //$prod->name = 'Update';
+        //$prod->number = '79789';
+        //$prod->active = true;
+        //$prod->category = 'eletronicos';
+        //$prod->description = 'Desc Update';
+        //$update = $prod->save();
+
+         //if( $update)
+           //return "Alterado com sucesso!";
+        //else
+           //return 'Falha ao alterar';
+
+        //$prod = $this->product->find(6);
+        //$update = $prod->update([
+            //'name' => 'Update Test',
+            //'number' => '6765756',
+            //'active' => true
+            //'category' => 'eletronicos',
+            //'description' => 'Descrição vem aqui'
+        //]);
+
+         //if( $update)
+           //return "Alterado com sucesso!";
+        //else
+          // return 'Falha ao alterar';
+   // }
+        /*
+        $prod = $this->product->where('number', 6765756);
+        $update = $prod->update([
+            'name' => 'Update Test 2',
+            'number' => '67657560',
+            'active' => false
+            //'category' => 'eletronicos',
+            //'description' => 'Descrição vem aqui'
+        ]);
+
+         if( $update)
+           return "Alterado com sucesso 2!";
+        else
+           return 'Falha ao alterar';
+        */
+        $delete = $this->product->where('number', 67657560)->delete();
+        
+        if( $delete)
+            return 'Deletado com sucesso 2!';
+        else
+            return 'Falha ao deletar';
     }
 }
