@@ -4,7 +4,7 @@
 
 <h1 class="title-pg">Listagem dos produtos</h1>
 
-<a href="" class="btn btn-primary btn-add"> <span class="glyphicon glyphicon-plus"></span>Cadastrar</a>
+<a href="{{route('produtos.create')}}" class="btn btn-primary btn-add"> <span class="glyphicon glyphicon-plus"></span>Cadastrar</a>
 
 <table class="table table-striped">
 	<tr>

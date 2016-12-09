@@ -36,7 +36,11 @@ class ProdutoController extends Controller
      */
     public function create()
     {
-        //
+        $title = "Cadastrar Novo Produto";
+
+        $categories = ['eletronicos', 'moveis', 'limpeza', 'banho'];
+
+        return view('painel.products.create', compact('title','categories'));
     }
 
     /**
@@ -47,7 +51,18 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Pega todos os dados que vem do formulário
+        $dataForm = $request->all();
+
+        $dataForm['active'] = ( !isset($dataForm['active']) ) ? 0 : 1;
+        
+        //Faz o cadastro
+        $insert = $this->product->create($dataForm);
+
+        if( $insert )
+            return redirect()->route('produtos.index');
+        else
+            return redirect()->route('produtos.create');
     }
 
     /**
