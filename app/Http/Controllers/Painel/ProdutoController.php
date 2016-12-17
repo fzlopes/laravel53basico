@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Painel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Painel\Product;
+use App\Http\Requests\Painel\ProductFormRequest;
 
 class ProdutoController extends Controller
 {
@@ -40,7 +41,7 @@ class ProdutoController extends Controller
 
         $categories = ['eletronicos', 'moveis', 'limpeza', 'banho'];
 
-        return view('painel.products.create', compact('title','categories'));
+        return view('painel.products.create-edit', compact('title','categories'));
     }
 
     /**
@@ -49,12 +50,31 @@ class ProdutoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductFormRequest $request)
     {
         //Pega todos os dados que vem do formulário
         $dataForm = $request->all();
 
         $dataForm['active'] = ( !isset($dataForm['active']) ) ? 0 : 1;
+
+        //Valida os dados
+        //$this->validate($request, $this->product->rules);
+        //$messages = [
+            //'name.required' => 'O campo nome é de preenchimento obrigatório',
+            //'number.numeric' => 'Precisa ser apenas números',
+            //'number.required' =>  'O campo número é de preenchimento obrigatório',
+        //];
+
+        //$validate = validator($dataForm, $this->product->rules, $messages);
+
+
+
+        //if( $validate->fails() ) {
+            //return redirect()
+                //->route('produtos.create')
+                //->withErrors($validate)
+                //->withinput();
+       // }
         
         //Faz o cadastro
         $insert = $this->product->create($dataForm);
@@ -62,7 +82,7 @@ class ProdutoController extends Controller
         if( $insert )
             return redirect()->route('produtos.index');
         else
-            return redirect()->route('produtos.create');
+            return redirect()->route('produtos.create-edit');
     }
 
     /**
@@ -84,7 +104,14 @@ class ProdutoController extends Controller
      */
     public function edit($id)
     {
-        //
+       //Recupera o produto pelo seu id
+        $product = $this->product->find($id);
+
+        $title = "Editar produto: $product->name";
+
+        $categories = ['eletronicos', 'moveis', 'limpeza', 'banho'];
+
+         return view('painel.products.create-edit', compact('title','categories', 'product'));
     }
 
     /**
@@ -96,7 +123,7 @@ class ProdutoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return "Editando o item de  {$id}";
     }
 
     /**
