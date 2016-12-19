@@ -10,6 +10,7 @@ use App\Http\Requests\Painel\ProductFormRequest;
 class ProdutoController extends Controller
 {
     private $product;
+    private $totalPage = 3;
 
     public function __construct(Product $product)
     {
@@ -25,7 +26,7 @@ class ProdutoController extends Controller
 
         $title = 'Listagem dos Produtos';
 
-        $products = $this->product->all();
+        $products = $this->product->paginate($this->totalPage);
         
         return view('painel.products.index', compact('products', 'title'));
     }
@@ -93,7 +94,11 @@ class ProdutoController extends Controller
      */
     public function show($id)
     {
-        //
+         $product = $this->product->find($id);
+
+         $title = "Produto: ($product->name)";
+
+         return view('painel.products.show', compact('product', 'title'));
     }
 
     /**
@@ -121,9 +126,21 @@ class ProdutoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductFormRequest $request, $id)
     {
-        return "Editando o item de  {$id}";
+        $dataForm = $request->all();
+
+        $product = $this->product->find($id);
+
+        $dataForm['active'] = ( !isset($dataForm['active']) ) ? 0 : 1;
+
+        $update = $this->product->update($dataForm);
+
+        if( $update)
+            return redirect()->route('produtos.index');
+        else
+            return redirect()->route('produtos.edit', $id)->with(['errors'=>'Falha ao editar']);
+
     }
 
     /**
@@ -134,7 +151,14 @@ class ProdutoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $product = $this->product->find($id);
+
+        $delete = $product->delete();
+
+        if ($delete)
+            return redirect()->route('produtos.index');
+        else 
+            return redirect()->route('produtos.show', $id)->with(['errors' => 'Falha ao deletar']);
     }
 
     public function tests() 
